@@ -1,0 +1,42 @@
+// Lookup table for segments a-g (Pins 1 to 7)
+// Each row represents digits 0-9
+const byte segments[10][7] = {
+  {1,1,1,1,1,1,0}, // 0
+  {0,1,1,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1}, // 2
+  {1,1,1,1,0,0,1}, // 3
+  {0,1,1,0,0,1,1}, // 4
+  {1,0,1,1,0,1,1}, // 5
+  {1,0,1,1,1,1,1}, // 6
+  {1,1,1,0,0,0,0}, // 7
+  {1,1,1,1,1,1,1}, // 8
+  {1,1,1,1,0,1,1}  // 9
+};
+
+int count = 0;
+const int buttonPin = 12;
+
+void setup() {
+  for (int i = 1; i <= 7; i++) pinMode(i, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+  displayDigit(count); // Show '0' at start
+}
+
+void loop() {
+  // Check if button is pressed (LOW)
+  if (digitalRead(buttonPin) == LOW) {
+    count++;             // Move to next digit
+    if (count > 9) count = 0; 
+    
+    displayDigit(count); // Update display
+    
+    delay(300);          // Simple debounce to prevent double-counting
+    while(digitalRead(buttonPin) == LOW); // Wait for button release
+  }
+}
+
+void displayDigit(int num) {
+  for (int i = 0; i < 7; i++) {
+    digitalWrite(i + 1, segments[num][i]);
+  }
+}
