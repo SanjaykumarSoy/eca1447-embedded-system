@@ -1,0 +1,20 @@
+#include <reg51.h>
+
+void main(void) {
+    unsigned char hexa = 0xFF; // Initial hexadecimal value
+    unsigned char hundreds, tens, units;
+
+    // Calculate units, tens, and hundreds
+    units = hexa % 10; // Get the units place
+    hexa = hexa / 10;  // Remove the units place
+    tens = hexa % 10;  // Get the tens place
+    hexa = hexa / 10;  // Remove the tens place
+    hundreds = hexa;   // Remaining value is hundreds
+
+    // Output the results to ports
+    P0 = units;   // Output units to port 0
+    P1 = tens;    // Output tens to port 1
+    P2 = hundreds; // Output hundreds to port 2
+
+    while(1); // Infinite loop to keep the program running
+}
