@@ -1,0 +1,18 @@
+#include <reg51.h>
+#include <stdio.h>
+
+void main() {
+    unsigned int i;
+    unsigned char num = 12; // The number to find the factorial of
+    unsigned long factorial = 1;
+
+    for (i = 1; i <= num; i++) {
+        factorial *= i;
+    }
+
+    // Ensure that the factorial is displayed correctly
+    P0 = factorial & 0xFF;          // Lower 8 bits
+    P1 = (factorial >> 8) & 0xFF;  // Next 8 bits
+    P2 = (factorial >> 16) & 0xFF; // Next 8 bits
+    P3 = (factorial >> 24) & 0xFF; // Upper 8 bits
+}
