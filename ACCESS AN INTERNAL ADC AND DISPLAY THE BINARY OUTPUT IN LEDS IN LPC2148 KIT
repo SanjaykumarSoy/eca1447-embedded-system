@@ -1,0 +1,42 @@
+#include <LPC214X.H>
+
+#define LEDS (0xFF << 8)
+#define AD0_1 (1 << 24)
+#define CLK_DIV (1 << 8)
+#define PDN (1 << 21)
+#define SOC (1 << 24)
+#define BURST (1 << 16)
+
+void delay(unsigned int k)
+{
+  unsigned int i,j;
+  for(j=0;j<k;j++)
+    for(i=0;i<800;i++);
+}
+
+void adc_init(void)
+{
+  AD0CR = SOC | PDN | CLK_DIV | BURST | (1<<1); // AD0.1
+}
+
+unsigned int adc_read(void)
+{
+  return (AD0DR1 >> 6) & 0x3FF;
+}
+
+int main(void)
+{
+  IODIR0 = LEDS;
+  PINSEL0 = 0;
+  PINSEL1 = AD0_1;
+
+  adc_init();
+
+  while(1)
+  {
+    unsigned int val = adc_read() >> 2; // 10-bit → 8-bit
+    IOSET0 = LEDS;
+    IOCLR0 = val << 8;
+    delay(1000);
+  }
+}
