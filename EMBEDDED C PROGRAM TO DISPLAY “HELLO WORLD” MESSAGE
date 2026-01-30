@@ -1,0 +1,22 @@
+#include <reg51.h>
+
+void UART_SendChar(char c) {
+    SBUF = c; // Load the character into the UART buffer
+    while (!TI); // Wait until the transmission is complete
+    TI = 0; // Clear the TI flag for the next transmission
+}
+
+void main(void) {
+    SCON = 0x50; // SCON: mode 1, 8-bit UART, enable receiver
+    TMOD = 0x20; // TMOD: timer 1, mode 2, 8-bit reload
+    TH1 = 0xFD; // TH1: reload value for 9600 baud rate
+    TR1 = 1; // TR1: timer 1 run
+    TI = 1; // TI: set TI to send first char of UART
+
+    while (1) {
+        char *message = "Hello World!\n";
+        for (int i = 0; message[i] != '\0'; i++) {
+            UART_SendChar(message[i]); // Send each character
+        }
+    }
+}
