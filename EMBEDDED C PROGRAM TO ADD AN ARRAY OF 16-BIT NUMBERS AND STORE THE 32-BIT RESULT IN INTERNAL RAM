@@ -1,0 +1,27 @@
+#include <reg51.h>
+
+void main() {
+    unsigned int i, array[5] = { 0x1111, 0x2222, 0x8888, 0x4444, 0xABCD };
+    unsigned long sum = 0;
+
+    // Initialize ports
+    P0 = 0x00;
+    P1 = 0x00;
+    P2 = 0x00;
+
+    // Calculate the sum
+    for (i = 0; i < 5; i++) {
+        sum += array[i];
+    }
+
+    // Check for overflow
+    if (sum > 0xFFFFFF) {
+        // Handle overflow (e.g., set sum to maximum value)
+        sum = 0xFFFFFF;
+    }
+
+    // Output the sum to the ports
+    P0 = sum & 0xFF;          // Lower byte
+    P1 = (sum & 0xFF00) >> 8; // Middle byte
+    P2 = (sum & 0xFF0000) >> 16; // Upper byte
+}
